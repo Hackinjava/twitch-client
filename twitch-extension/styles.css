@@ -1,0 +1,279 @@
+/* Twitch Client Simulator Styles */
+
+#twitch-client-overlay {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 99999;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.tcc-panel {
+  background: rgba(24, 24, 27, 0.95);
+  border: 1px solid #bf94ff;
+  border-radius: 8px;
+  padding: 15px;
+  width: 280px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.tcc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #2d2d31;
+}
+
+.tcc-title {
+  color: #bf94ff;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.tcc-close {
+  background: none;
+  border: none;
+  color: #adadb8;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.tcc-close:hover {
+  background: #eb0400;
+  color: white;
+}
+
+.tcc-section {
+  margin-bottom: 15px;
+}
+
+.tcc-section:last-child {
+  margin-bottom: 0;
+}
+
+.tcc-label {
+  display: block;
+  color: #efeff1;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.tcc-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: #0e0e10;
+  border: 1px solid #2d2d31;
+  border-radius: 4px;
+  color: #efeff1;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.tcc-input:focus {
+  outline: none;
+  border-color: #bf94ff;
+}
+
+.tcc-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  background: #bf94ff;
+  border: none;
+  border-radius: 4px;
+  color: #0e0e10;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tcc-btn:hover {
+  background: #a970ff;
+  transform: translateY(-1px);
+}
+
+.tcc-btn.danger {
+  background: #eb0400;
+  color: white;
+}
+
+.tcc-btn.danger:hover {
+  background: #ff1f1f;
+}
+
+.tcc-btn.success {
+  background: #00f593;
+  color: #0e0e10;
+}
+
+.tcc-btn.success:hover {
+  background: #00d47a;
+}
+
+.tcc-status {
+  font-size: 12px;
+  color: #00f593;
+  text-align: center;
+  padding: 6px;
+  background: rgba(0, 245, 147, 0.1);
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+/* Follower Display */
+.tcc-follower-display {
+  background: linear-gradient(135deg, #bf94ff 0%, #a970ff 100%);
+  padding: 12px;
+  border-radius: 6px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.tcc-follower-count {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0e0e10;
+}
+
+.tcc-follower-label {
+  font-size: 12px;
+  color: rgba(14, 14, 16, 0.8);
+  margin-top: 4px;
+}
+
+/* Donation Notification */
+.tcc-donation-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #1f1f23 0%, #2d2d31 100%);
+  border: 2px solid #ffd700;
+  border-radius: 12px;
+  padding: 20px;
+  width: 320px;
+  z-index: 99998;
+  box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+  animation: tccSlideIn 0.5s ease-out;
+}
+
+@keyframes tccSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes tccSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.tcc-donation-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.tcc-donation-icon {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.tcc-donation-username {
+  color: #ffd700;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.tcc-donation-amount {
+  color: #00f593;
+  font-weight: 700;
+  font-size: 18px;
+  margin-left: auto;
+}
+
+.tcc-donation-message {
+  color: #efeff1;
+  font-size: 14px;
+  line-height: 1.4;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.tcc-donation-footer {
+  margin-top: 10px;
+  font-size: 11px;
+  color: #adadb8;
+  text-align: right;
+}
+
+/* Chat spam indicator */
+.tcc-spam-indicator {
+  position: fixed;
+  top: 80px;
+  right: 10px;
+  background: #eb0400;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 99997;
+  animation: tccPulse 1s infinite;
+}
+
+@keyframes tccPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Toggle button for panel */
+#tcc-toggle-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #bf94ff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: #0e0e10;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 99996;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
+}
+
+#tcc-toggle-btn:hover {
+  background: #a970ff;
+  transform: translateY(-2px);
+}

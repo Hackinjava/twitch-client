@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twitch Client Tools</title>
+  <style>
+    body {
+      width: 320px;
+      padding: 15px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0e0e10;
+      color: #efeff1;
+      margin: 0;
+    }
+    h2 {
+      margin: 0 0 15px 0;
+      font-size: 18px;
+      color: #bf94ff;
+      text-align: center;
+    }
+    .section {
+      margin-bottom: 20px;
+      padding: 12px;
+      background: #18181b;
+      border-radius: 8px;
+      border: 1px solid #2d2d31;
+    }
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #efeff1;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 5px;
+      color: #adadb8;
+    }
+    input[type="number"], input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      background: #0e0e10;
+      border: 1px solid #2d2d31;
+      border-radius: 4px;
+      color: #efeff1;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    input:focus {
+      outline: none;
+      border-color: #bf94ff;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      background: #bf94ff;
+      border: none;
+      border-radius: 4px;
+      color: #0e0e10;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #a970ff;
+    }
+    button.danger {
+      background: #eb0400;
+      color: white;
+    }
+    button.danger:hover {
+      background: #ff1f1f;
+    }
+    .status {
+      font-size: 12px;
+      text-align: center;
+      padding: 8px;
+      background: #1f1f23;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+    .active {
+      color: #00f593;
+    }
+    .inactive {
+      color: #efeff1;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎮 Twitch Client Tools</h2>
+  
+  <div class="section">
+    <div class="section-title">Follower Counter</div>
+    <label for="followerCount">Followers (1-1000):</label>
+    <input type="number" id="followerCount" min="1" max="1000" value="100">
+    <button id="setFollowers">Set Followers</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Chat Spam</div>
+    <label for="spamMessage">Message:</label>
+    <input type="text" id="spamMessage" placeholder="Enter message to spam">
+    <button id="startSpam">Start Spam</button>
+    <button id="stopSpam" class="danger">Stop Spam</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Fake Donation</div>
+    <button id="generateDonation">Generate Donation</button>
+  </div>
+
+  <div class="status" id="status">
+    <span class="inactive">Status: Not on Twitch channel</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
