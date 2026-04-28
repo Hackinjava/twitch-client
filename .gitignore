@@ -1,1 +1,7 @@
-Nothing needs to be added to .gitignore since only a single HTML file (`twitch-client.html`) was added, which is a source file that should be tracked in version control.
+```
+# Compressed files
+*.zip
+
+# Build artifacts
+twitch-client-extension.zip
+```

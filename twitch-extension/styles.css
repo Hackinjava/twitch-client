@@ -1,0 +1,22 @@
+/* Additional styles for Twitch overlay elements */
+
+#twitch-sim-follower-badge {
+  transition: all 0.3s ease;
+}
+
+#twitch-sim-follower-badge:hover {
+  transform: scale(1.05);
+}
+
+.chat-line__message {
+  transition: opacity 0.3s ease;
+}
+
+.donation-notification {
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
