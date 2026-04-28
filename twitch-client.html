@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitch Client Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0e0e10;
+            color: #efeff1;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #18181b;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #303032;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #bf94ff;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #bf94ff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .user-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .username-display {
+            background-color: #303032;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .username-display.inactive {
+            opacity: 0.5;
+        }
+
+        .username-display.active {
+            background-color: #bf94ff;
+            color: #0e0e10;
+            font-weight: bold;
+        }
+
+        .main-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #18181b;
+            border-radius: 8px;
+            padding: 20px;
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            color: #adadb8;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .channel-list {
+            list-style: none;
+        }
+
+        .channel-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .channel-item:hover {
+            background-color: #303032;
+        }
+
+        .channel-item.active {
+            background-color: #303032;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #bf94ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .channel-info {
+            flex: 1;
+        }
+
+        .channel-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .channel-game {
+            font-size: 12px;
+            color: #adadb8;
+        }
+
+        .live-indicator {
+            background-color: #eb0400;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .content-area {
+            flex: 1;
+        }
+
+        .stream-player {
+            background-color: #000;
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stream-placeholder {
+            text-align: center;
+            color: #adadb8;
+        }
+
+        .stream-placeholder h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .stream-info {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .stream-details {
+            flex: 1;
+        }
+
+        .stream-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .stream-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background-color: #303032;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #adadb8;
+        }
+
+        .controls-panel {
+            background-color: #18181b;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .controls-panel h3 {
+            margin-bottom: 20px;
+            color: #bf94ff;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #adadb8;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #bf94ff;
+            color: #0e0e10;
+        }
+
+        .btn-primary:hover {
+            background-color: #a970ff;
+        }
+
+        .btn-danger {
+            background-color: #eb0400;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c40000;
+        }
+
+        .btn-success {
+            background-color: #00f593;
+            color: #0e0e10;
+        }
+
+        .btn-success:hover {
+            background-color: #00d47f;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .follower-control {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .follower-input {
+            background-color: #303032;
+            border: 1px solid #303032;
+            color: #efeff1;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 120px;
+        }
+
+        .follower-input:focus {
+            outline: none;
+            border-color: #bf94ff;
+        }
+
+        .follower-count {
+            background-color: #303032;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .chat-section {
+            background-color: #18181b;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #303032;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .chat-username {
+            font-weight: bold;
+            color: #bf94ff;
+        }
+
+        .chat-text {
+            color: #efeff1;
+        }
+
+        .donation-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #bf94ff, #a970ff);
+            color: #0e0e10;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            min-width: 300px;
+            animation: slideIn 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .donation-header {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .donation-amount {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .donation-message {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .spam-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .spam-input {
+            flex: 1;
+            background-color: #303032;
+            border: 1px solid #303032;
+            color: #efeff1;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .spam-input:focus {
+            outline: none;
+            border-color: #bf94ff;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .status-badge.offline {
+            background-color: #303032;
+            color: #adadb8;
+        }
+
+        .status-badge.online {
+            background-color: #00f593;
+            color: #0e0e10;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">📺</div>
+            <span>TwitchSim</span>
+        </div>
+        <div class="user-status">
+            <div id="usernameDisplay" class="username-display inactive">
+                <span id="currentUsername">@username</span>
+                <span id="statusBadge" class="status-badge offline">Offline</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <h3>Recommended Channels</h3>
+            <ul class="channel-list">
+                <li class="channel-item" data-channel="gamer_pro_2024">
+                    <div class="avatar">G</div>
+                    <div class="channel-info">
+                        <div class="channel-name">gamer_pro_2024</div>
+                        <div class="channel-game">Playing Fortnite</div>
+                    </div>
+                    <span class="live-indicator">LIVE</span>
+                </li>
+                <li class="channel-item" data-channel="speedrun_master">
+                    <div class="avatar">S</div>
+                    <div class="channel-info">
+                        <div class="channel-name">speedrun_master</div>
+                        <div class="channel-game">Playing Minecraft</div>
+                    </div>
+                    <span class="live-indicator">LIVE</span>
+                </li>
+                <li class="channel-item" data-channel="chill_vibes_only">
+                    <div class="avatar">C</div>
+                    <div class="channel-info">
+                        <div class="channel-name">chill_vibes_only</div>
+                        <div class="channel-game">Just Chatting</div>
+                    </div>
+                    <span class="live-indicator">LIVE</span>
+                </li>
+                <li class="channel-item" data-channel="esports_central">
+                    <div class="avatar">E</div>
+                    <div class="channel-info">
+                        <div class="channel-name">esports_central</div>
+                        <div class="channel-game">Playing League of Legends</div>
+                    </div>
+                    <span class="live-indicator">LIVE</span>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="content-area">
+            <div class="stream-player" id="streamPlayer">
+                <div class="stream-placeholder">
+                    <h2>Select a channel to start watching</h2>
+                    <p>Click on any channel from the sidebar</p>
+                </div>
+            </div>
+
+            <div class="stream-info hidden" id="streamInfo">
+                <div class="stream-details">
+                    <h1 class="stream-title" id="streamTitle">Channel Title</h1>
+                    <div class="stream-meta">
+                        <span class="tag" id="streamGame">Game Category</span>
+                        <span class="tag">English</span>
+                        <span class="tag">HD</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-panel">
+                <h3>🎮 Stream Controls</h3>
+                
+                <div class="control-group">
+                    <label>Followers Simulation</label>
+                    <div class="follower-control">
+                        <input type="number" id="followerInput" class="follower-input" 
+                               min="1" max="1000" value="100" placeholder="1-1000">
+                        <button class="btn btn-primary" id="setFollowersBtn" disabled>Set Followers</button>
+                        <div class="follower-count">
+                            Current: <span id="followerCount">100</span> followers
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Chat Spam Control</label>
+                    <div class="spam-controls">
+                        <input type="text" id="spamMessage" class="spam-input" 
+                               placeholder="Enter message to spam..." disabled>
+                        <button class="btn btn-danger" id="startSpamBtn" disabled>Start Spam</button>
+                        <button class="btn btn-danger" id="stopSpamBtn" disabled>Stop Spam</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Fake Donation Generator</label>
+                    <button class="btn btn-success" id="generateDonationBtn" disabled>
+                        💰 Generate Fake Donation
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-section hidden" id="chatSection">
+                <div class="chat-header">Stream Chat</div>
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Chat messages will appear here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // State management
+        let currentState = {
+            activeChannel: null,
+            followerCount: 100,
+            isSpamming: false,
+            spamInterval: null,
+            username: '@username'
+        };
+
+        // DOM Elements
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const currentUsername = document.getElementById('currentUsername');
+        const statusBadge = document.getElementById('statusBadge');
+        const streamPlayer = document.getElementById('streamPlayer');
+        const streamInfo = document.getElementById('streamInfo');
+        const streamTitle = document.getElementById('streamTitle');
+        const streamGame = document.getElementById('streamGame');
+        const followerInput = document.getElementById('followerInput');
+        const setFollowersBtn = document.getElementById('setFollowersBtn');
+        const followerCount = document.getElementById('followerCount');
+        const spamMessage = document.getElementById('spamMessage');
+        const startSpamBtn = document.getElementById('startSpamBtn');
+        const stopSpamBtn = document.getElementById('stopSpamBtn');
+        const generateDonationBtn = document.getElementById('generateDonationBtn');
+        const chatSection = document.getElementById('chatSection');
+        const chatMessages = document.getElementById('chatMessages');
+
+        // Random username generator for donations
+        const randomUsernames = [
+            'GamerKing2024', 'ProPlayer99', 'StreamFan123', 'NightOwl_Gaming',
+            'EpicWinner', 'CoolCat456', 'DragonSlayer777', 'PixelMaster',
+            'ChillVibes88', 'SpeedDemon_X', 'MysticGamer', 'ThunderStrike',
+            'ShadowNinja42', 'PhoenixRising', 'CyberPunk2077', 'RetroGamer90s',
+            'NoobMaster69', 'LegendaryPlayer', 'QuestSeeker', 'BattleRoyalePro'
+        ];
+
+        const donationMessages = [
+            "Keep up the great content!",
+            "This stream is amazing!",
+            "You're so talented!",
+            "Been watching since day one!",
+            "Can you play my favorite game next?",
+            "Love your energy!",
+            "Best streamer ever!",
+            "Thanks for the entertainment!",
+            "You deserve all the success!",
+            "Can't stop watching!"
+        ];
+
+        const chatEmotes = ['Kappa', 'PogChamp', 'LUL', 'MonkaS', 'PepeHands', 'BibleThump', 'DansGame', 'NotLikeThis'];
+
+        // Initialize
+        function init() {
+            setupEventListeners();
+            updateUIState();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Channel selection
+            document.querySelectorAll('.channel-item').forEach(item => {
+                item.addEventListener('click', () => selectChannel(item.dataset.channel));
+            });
+
+            // Follower control
+            setFollowersBtn.addEventListener('click', updateFollowers);
+            followerInput.addEventListener('change', validateFollowerInput);
+
+            // Spam controls
+            startSpamBtn.addEventListener('click', startSpam);
+            stopSpamBtn.addEventListener('click', stopSpam);
+
+            // Donation generator
+            generateDonationBtn.addEventListener('click', generateFakeDonation);
+        }
+
+        // Select a channel
+        function selectChannel(channelName) {
+            // Update active channel in sidebar
+            document.querySelectorAll('.channel-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-channel="${channelName}"]`).classList.add('active');
+
+            // Set active state
+            currentState.activeChannel = channelName;
+            currentState.username = `@${channelName}`;
+
+            // Update UI
+            updateUIState();
+            loadStreamData(channelName);
+        }
+
+        // Update UI based on state
+        function updateUIState() {
+            const isActive = currentState.activeChannel !== null;
+
+            // Username display
+            if (isActive) {
+                usernameDisplay.classList.remove('inactive');
+                usernameDisplay.classList.add('active');
+                currentUsername.textContent = currentState.username;
+                statusBadge.textContent = 'Online';
+                statusBadge.classList.remove('offline');
+                statusBadge.classList.add('online');
+            } else {
+                usernameDisplay.classList.add('inactive');
+                usernameDisplay.classList.remove('active');
+                currentUsername.textContent = '@username';
+                statusBadge.textContent = 'Offline';
+                statusBadge.classList.remove('online');
+                statusBadge.classList.add('offline');
+            }
+
+            // Enable/disable controls
+            setFollowersBtn.disabled = !isActive;
+            spamMessage.disabled = !isActive;
+            startSpamBtn.disabled = !isActive;
+            stopSpamBtn.disabled = !isActive || !currentState.isSpamming;
+            generateDonationBtn.disabled = !isActive;
+
+            // Show/hide sections
+            if (isActive) {
+                chatSection.classList.remove('hidden');
+                streamInfo.classList.remove('hidden');
+            } else {
+                chatSection.classList.add('hidden');
+                streamInfo.classList.add('hidden');
+            }
+        }
+
+        // Load stream data
+        function loadStreamData(channelName) {
+            const games = ['Fortnite', 'Minecraft', 'Just Chatting', 'League of Legends', 
+                          'Valorant', 'Call of Duty', 'Among Us', 'Rocket League'];
+            const titles = [
+                `🔴 LIVE: ${channelName}'s Epic Gaming Session!`,
+                `Road to Rank 1! | !discord !socials`,
+                `Chill vibes and good times 🎮`,
+                `Speedrun attempts - PB today?`,
+                `New game release playthrough!`
+            ];
+
+            const randomGame = games[Math.floor(Math.random() * games.length)];
+            const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+
+            streamTitle.textContent = randomTitle;
+            streamGame.textContent = randomGame;
+
+            // Update stream player
+            streamPlayer.innerHTML = `
+                <div style="text-align: center; color: #adadb8;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">🎬</div>
+                    <h2 style="color: #efeff1; margin-bottom: 10px;">Watching: ${channelName}</h2>
+                    <p>Live stream simulation</p>
+                    <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+                        <span class="live-indicator">LIVE</span>
+                        <span style="background: #303032; padding: 2px 8px; border-radius: 4px; font-size: 11px;">
+                            👁 ${Math.floor(Math.random() * 50000) + 1000} viewers
+                        </span>
+                    </div>
+                </div>
+            `;
+
+            // Add initial chat messages
+            addInitialChatMessages();
+        }
+
+        // Add initial chat messages
+        function addInitialChatMessages() {
+            chatMessages.innerHTML = '';
+            const initialMessages = [
+                { user: 'Viewer123', text: 'Hey everyone!' },
+                { user: 'FanBoy99', text: 'First time here, loving it!' },
+                { user: 'RegularWatcher', text: 'Been here since the start 🔥' },
+                { user: 'GamerGirl42', text: `${chatEmotes[Math.floor(Math.random() * chatEmotes.length)]}` }
+            ];
+
+            initialMessages.forEach(msg => {
+                addChatMessage(msg.user, msg.text);
+            });
+        }
+
+        // Add chat message
+        function addChatMessage(username, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message';
+            messageDiv.innerHTML = `
+                <span class="chat-username">${username}:</span>
+                <span class="chat-text"> ${text}</span>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Validate follower input
+        function validateFollowerInput() {
+            let value = parseInt(followerInput.value);
+            if (value < 1) value = 1;
+            if (value > 1000) value = 1000;
+            followerInput.value = value;
+        }
+
+        // Update followers
+        function updateFollowers() {
+            let value = parseInt(followerInput.value);
+            if (value < 1) value = 1;
+            if (value > 1000) value = 1000;
+            
+            currentState.followerCount = value;
+            followerCount.textContent = value;
+            
+            // Visual feedback
+            setFollowersBtn.textContent = '✓ Updated!';
+            setTimeout(() => {
+                setFollowersBtn.textContent = 'Set Followers';
+            }, 1000);
+        }
+
+        // Start spam
+        function startSpam() {
+            const message = spamMessage.value.trim() || 'SPAM SPAM SPAM!';
+            
+            if (currentState.isSpamming) return;
+            
+            currentState.isSpamming = true;
+            startSpamBtn.disabled = true;
+            stopSpamBtn.disabled = false;
+
+            // Send first message immediately
+            addChatMessage(currentState.username, message);
+
+            // Continue spamming
+            currentState.spamInterval = setInterval(() => {
+                if (currentState.activeChannel) {
+                    addChatMessage(currentState.username, message);
+                    
+                    // Sometimes add emotes
+                    if (Math.random() > 0.7) {
+                        const emote = chatEmotes[Math.floor(Math.random() * chatEmotes.length)];
+                        addChatMessage(currentState.username, emote);
+                    }
+                }
+            }, 800);
+        }
+
+        // Stop spam
+        function stopSpam() {
+            if (!currentState.isSpamming) return;
+            
+            clearInterval(currentState.spamInterval);
+            currentState.isSpamming = false;
+            startSpamBtn.disabled = false;
+            stopSpamBtn.disabled = true;
+        }
+
+        // Generate fake donation
+        function generateFakeDonation() {
+            const randomUsername = randomUsernames[Math.floor(Math.random() * randomUsernames.length)];
+            const randomAmount = (Math.random() * 100 + 1).toFixed(2);
+            const randomMessage = donationMessages[Math.floor(Math.random() * donationMessages.length)];
+            const bits = Math.floor(Math.random() * 500) + 100;
+
+            const notification = document.createElement('div');
+            notification.className = 'donation-notification';
+            notification.innerHTML = `
+                <div class="donation-header">
+                    💜 ${randomUsername} donated!
+                </div>
+                <div class="donation-amount">$${randomAmount} (${bits} bits)</div>
+                <div class="donation-message">"${randomMessage}"</div>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Add donation message to chat
+            addChatMessage(randomUsername, `💜 Donated $${randomAmount} - ${randomMessage}`);
+
+            // Remove notification after 5 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
